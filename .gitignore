@@ -13,6 +13,3 @@ yarn-error.log*
 .vercel
 next-env.d.ts
 *.tsbuildinfo
-
-# local-only files
-README.md
