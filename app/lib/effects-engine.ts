@@ -775,7 +775,7 @@ export class EffectsEngine {
     });
   }
 
-  /** 每次完整触发固定交错排入 4 枚绚烂、2 枚仿真和 5 枚精细烟花。 */
+  /** 每次完整触发固定交错排入 4 枚绚烂、3 枚仿真和 7 枚精细烟花。 */
   private queueTripleRockets(particleBudget: number) {
     const particleScale = this.compactDevice
       ? PERFORMANCE_BUDGET.mobileFireworkParticleScale
