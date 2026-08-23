@@ -10,7 +10,11 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   basePath: githubBasePath,
   assetPrefix: githubBasePath,
+  allowedDevOrigins: ['192.168.1.7'],
   images: { unoptimized: true },
 };
+
+module.exports = nextConfig;
+
 
 export default nextConfig;

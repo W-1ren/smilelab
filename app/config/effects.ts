@@ -566,8 +566,8 @@ export const PERFORMANCE_BUDGET = {
   mobileDevicePixelRatioCap: 1,
   /** 系统要求“减少动态效果”时的粒子倍率。 */
   reducedMotionParticleScale: 0.48,
-  /** 减少动态效果时仍保证一组三重烟花可发射的粒子下限。 */
-  reducedMotionMinimumParticles: 200,
+  /** 减少动态效果时的粒子下限；必须不低于一组三重烟花的最低预算（11 枚火箭 + 各层最小粒子 212 = 223），否则雨滴让位后仍无法触发烟花。 */
+  reducedMotionMinimumParticles: 240,
   /** 移动端单枚烟花的内部粒子倍率；不会减少 11 枚火箭。 */
   mobileFireworkParticleScale: 0.48,
   /** 移动端火花历史轨迹保留比例。 */

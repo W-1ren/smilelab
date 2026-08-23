@@ -449,12 +449,18 @@ export class EffectsEngine {
     return this.burst();
   }
 
-  /** 一组完整三重烟花的最低粒子预算：11 枚火箭 + 各层最小主粒子。 */
+  /** 一组完整三重烟花的最低粒子预算：全部火箭 + 各层最小主粒子（移动端按倍率缩放）。 */
   private get minimumTripleFireworkBudget() {
     const launchOrder = TRIPLE_FIREWORK_CONFIG.launchOrder;
+    const particleScale = this.compactDevice
+      ? PERFORMANCE_BUDGET.mobileFireworkParticleScale
+      : 1;
     let minimum = launchOrder.length;
     for (const kind of launchOrder) {
-      minimum += TRIPLE_FIREWORK_CONFIG.layers[kind].minParticles;
+      const base = TRIPLE_FIREWORK_CONFIG.layers[kind].minParticles;
+      minimum += this.compactDevice
+        ? Math.max(6, Math.round(base * particleScale))
+        : base;
     }
     return minimum;
   }
@@ -778,9 +784,14 @@ export class EffectsEngine {
         : 1;
     const launchOrder = TRIPLE_FIREWORK_CONFIG.launchOrder;
     const particleBudgetAfterRockets = particleBudget - launchOrder.length;
-    const minimums = launchOrder.map(
-      (kind) => TRIPLE_FIREWORK_CONFIG.layers[kind].minParticles,
-    );
+    // 移动端粒子池小，各层“最小粒子数”按移动端倍率同步缩放，
+    // 否则 14 枚火箭的最小预算（286）会超过移动端池上限，烟花永远无法触发。
+    const minimums = launchOrder.map((kind) => {
+      const base = TRIPLE_FIREWORK_CONFIG.layers[kind].minParticles;
+      return this.compactDevice
+        ? Math.max(6, Math.round(base * particleScale))
+        : base;
+    });
     const minimumTotal = minimums.reduce((total, value) => total + value, 0);
     if (particleBudgetAfterRockets < minimumTotal) return false;
 
