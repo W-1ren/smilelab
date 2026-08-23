@@ -387,8 +387,15 @@ export class RainGlassEngine {
     );
     gl.uniform1f(this.uniforms.speed, RAIN_GLASS_CONFIG.speed * speedScale);
     gl.uniform1f(this.uniforms.dropScale, RAIN_GLASS_CONFIG.dropScale);
-    gl.uniform1f(this.uniforms.normalStrength, RAIN_GLASS_CONFIG.normalStrength);
-    gl.uniform1f(this.uniforms.blurIntensity, RAIN_GLASS_CONFIG.blurIntensity);
+    // 移动端把折射与镜头柔焦减半，保持画面锐利，避免人物被糊化变形。
+    gl.uniform1f(
+      this.uniforms.normalStrength,
+      RAIN_GLASS_CONFIG.normalStrength * (this.compactDevice ? 0.5 : 1),
+    );
+    gl.uniform1f(
+      this.uniforms.blurIntensity,
+      RAIN_GLASS_CONFIG.blurIntensity * (this.compactDevice ? 0.45 : 1),
+    );
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     this.canvas.classList.add("is-active");
   }

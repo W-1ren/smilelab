@@ -399,10 +399,10 @@ export const RAIN_GLASS_CONFIG = {
   maxFps: 30,
   resolutionScale: 0.72,
   /** WebGL 画布像素比上限。 */
-  pixelRatioCap: 1,
-  /** 移动端只降低内部刷新率和采样分辨率，不改变水珠参数。 */
+  pixelRatioCap: 2,
+  /** 移动端只降低内部刷新率，采样分辨率与桌面一致，避免人物被低分辨率拉伸变形。 */
   mobileMaxFps: 24,
-  mobileResolutionScale: 0.54,
+  mobileResolutionScale: 0.72,
 } as const;
 
 export const FIREWORK_PHYSICS_CONFIG = {

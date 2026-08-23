@@ -432,7 +432,14 @@ export class EffectsEngine {
   /** 手动演示或无指定人物时触发烟花。 */
   burst() {
     if (this.fireworksActive) return false;
-    const available = Math.max(0, this.maxParticles - this.particleCount);
+    let available = Math.max(0, this.maxParticles - this.particleCount);
+    // 移动端粒子池小，持续下雨会占满额度导致烟花被拒绝。
+    // 烟花优先：预算不足时先移除部分雨滴让位，爆炸后再随额度恢复。
+    if (available < this.minimumTripleFireworkBudget && this.rain.length > 0) {
+      const deficit = this.minimumTripleFireworkBudget - available;
+      this.rain.splice(0, Math.min(deficit, this.rain.length));
+      available = Math.max(0, this.maxParticles - this.particleCount);
+    }
     return this.queueTripleRockets(available);
   }
 
@@ -440,6 +447,16 @@ export class EffectsEngine {
   burstForFaces(faceIds: number[]) {
     if (!faceIds.length) return false;
     return this.burst();
+  }
+
+  /** 一组完整三重烟花的最低粒子预算：11 枚火箭 + 各层最小主粒子。 */
+  private get minimumTripleFireworkBudget() {
+    const launchOrder = TRIPLE_FIREWORK_CONFIG.launchOrder;
+    let minimum = launchOrder.length;
+    for (const kind of launchOrder) {
+      minimum += TRIPLE_FIREWORK_CONFIG.layers[kind].minParticles;
+    }
+    return minimum;
   }
 
   private get fireworksActive() {
